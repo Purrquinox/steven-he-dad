@@ -1,11 +1,19 @@
+// Packages
 const {
    Client,
    GatewayIntentBits,
    ActivityType
 } = require('discord.js'); 
 const client = new Client({
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
+    intents: [
+	GatewayIntentBits.Guilds, 
+	GatewayIntentBits.GuildMembers, 
+	GatewayIntentBits.GuildMessages, 
+	GatewayIntentBits.MessageContent
+    ]
 });
+const database = require("./database.js");
+const words = require("./words.json");
 require("dotenv").config();
 
 // Ready
@@ -17,8 +25,7 @@ client.once('ready', () => {
 
     client.user.setStatus("dnd");
 
-    client.channels.cache.get("896956024081248257").send("all of you are failures");
-
+    client.channels.cache.get("896956024081248257").send("Connected to Discord!");
     console.log("Connected to Discord");
 });
 
@@ -27,14 +34,32 @@ client.on("messageCreate", (message) => {
     // Block Bots
     if (message.author.bot) return;
 
-    // Automatic Bot Replies (Random Message)
-    if (message.content.toLowerCase().includes("drugs")) {
-        message.reply("Don't do drugs, too expensive");
-    }
+    // Automatic Bot Replies
+    const content = message.content.toLowerCase();
+    let matchFound = false;
 
-    if (message.content.toLowerCase().includes("siri")) {
-        message.reply("My name is Alexa!");
-    }
+    content.split(" ").forEach((word) => {
+       if (matchFound) return;
+
+       const match = words[word];
+
+       if (!match) return;
+       else {
+          message.reply(match);
+          matchFound = true;
+       }
+    });
+});
+
+// Member Join
+client.on("guildMemberAdd", (member) => {
+   client.channels.cache.get("896956024081248257").send(`https://tenor.com/view/steven-he-welcome-to-the-failure-gif-24563965`);
+   client.channels.cache.get("896956024081248257").send(`<@${member.id}>`);
+
+   // Assign failure role (if exists)
+   let role = member.guild.roles.cache.find(r => r.name == 'failures');
+   if (!role) return;
+   member.roles.add(role);
 });
 
 // Login to Discord
