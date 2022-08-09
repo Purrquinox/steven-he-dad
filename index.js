@@ -25,7 +25,6 @@ client.once('ready', () => {
 
     client.user.setStatus("dnd");
 
-    client.channels.cache.get("896956024081248257").send("Connected to Discord!");
     console.log("Connected to Discord");
 });
 
@@ -53,8 +52,8 @@ client.on("messageCreate", (message) => {
 
 // Member Join
 client.on("guildMemberAdd", (member) => {
-   client.channels.cache.get("896956024081248257").send(`https://tenor.com/view/steven-he-welcome-to-the-failure-gif-24563965`);
-   client.channels.cache.get("896956024081248257").send(`<@${member.id}>`);
+   client.channels.cache.get("1005175177161752636").send(`https://tenor.com/view/steven-he-welcome-to-the-failure-gif-24563965`);
+   client.channels.cache.get("1005175177161752636").send(`<@${member.id}>`);
 
    // Assign failure role (if exists)
    let role = member.guild.roles.cache.find(r => r.name == 'failures');
