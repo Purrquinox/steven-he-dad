@@ -11,6 +11,7 @@ const sequelize = new Sequelize({
 	host: "0.0.0.0",
 	username: "select",
 	database: "failuremgmt",
+        password: "password",
 	port: 7399,
 	logging: (data) => {
 		return;
