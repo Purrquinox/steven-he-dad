@@ -72,7 +72,7 @@ client.on("messageCreate", async (message) => {
 	if (!user) {
 		database.User.createUser(message.author.id, message.guild.id, 0);
 
-		message.reply({
+		message.user.send({
 			content: `Hello fellow failure, thanks for sending your first message in **${message.guild.name}**. You can now earn xp by being active here, and you can always track your xp by doing \`${process.env.PREFIX}user\`.`,
 		});
 	}
