@@ -1,0 +1,32 @@
+{
+	"words": {
+		"drugs": "Don't do drugs, too expensive",
+		"nightmare": "i agree, that is a nightmare",
+		"failure": "You are a failure"
+	},
+
+	"memes": {
+		"failure_management": "https://tenor.com/view/steven-he-welcome-to-the-failure-gif-24563965",
+		"emotional_damage": "https://tenor.com/view/emotional-gif-24544226",
+		"what_da_hell": "https://tenor.com/view/steven-he-what-the-hell-gif-21811925"
+	},
+
+	"level_roles": {
+		"1": "General Failure",
+		"2": "Average Failure",
+		"3": "Moderate Failure",
+		"4": "Experienced Failure",
+		"5": "Epic Failure",
+		"6": "Expert Failure",
+		"7": "SuperStar Failure",
+		"8": "TopNotch Failure",
+		"9": "Failure Legend"
+	},
+
+	"permissions": {
+		"0": "Failure",
+		"1": "Administrator",
+		"2": "Failure_Manager",
+		"3": "Somewhat_Failure_Manager"
+	}
+}
