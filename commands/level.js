@@ -3,6 +3,7 @@ module.exports = {
 		name: "level",
 		description: "Check your level/xp.",
 		permission: 0,
+		category: "levels",
 		arguments: ["failure"],
 	},
 	async execute(context, client, database) {

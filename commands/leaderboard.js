@@ -3,6 +3,7 @@ module.exports = {
 		name: "leaderboard",
 		description: "View the server leaderboard.",
 		permission: 0,
+		category: "levels",
 		arguments: null,
 	},
 	async execute(context, client, database) {

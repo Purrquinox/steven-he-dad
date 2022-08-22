@@ -6,6 +6,7 @@ module.exports = {
 		name: "user",
 		description: "Get information about a failure.",
 		permission: 0,
+		category: "failure",
 		arguments: ["failure"],
 	},
 	async execute(context, client, database) {

@@ -73,9 +73,15 @@ client.on("messageCreate", async (message) => {
 	if (!user) {
 		database.User.createUser(message.author.id, message.guild.id, 0);
 
-		message.user.send({
-			content: `Hello fellow failure, thanks for sending your first message in **${message.guild.name}**. You can now earn xp by being active here, and you can always track your xp by doing \`${process.env.PREFIX}level\`.`,
-		});
+		message.author
+			.send({
+				content: `Hello fellow failure, thanks for sending your first message in **${message.guild.name}**. You can now earn xp by being active here, and you can always track your xp by doing \`${process.env.PREFIX}level\`.`,
+			})
+			.catch((error) => {
+				message.reply({
+					content: `Hello fellow failure, thanks for sending your first message in **${message.guild.name}**. You can now earn xp by being active here, and you can always track your xp by doing \`${process.env.PREFIX}level\`.`,
+				});
+			});
 	}
 
 	// Leveling System
@@ -116,9 +122,7 @@ client.on("messageCreate", async (message) => {
 					(r) => r.name == level_roles[level]
 				);
 
-				if (role) {
-					message.member.roles.add(role);
-				}
+				if (role) message.member.roles.add(role);
 			}
 
 			// Send Message regarding the level up
@@ -203,18 +207,60 @@ client.on("messageCreate", async (message) => {
 		});
 
 	try {
-		const commandData = {
+		const context = {
 			message: message,
 			arguments: args,
 		};
 
-		await command.execute(commandData, client, database);
+		await command.execute(context, client, database);
 	} catch (error) {
 		logger.error(`Command (${commandName})`, error);
 
 		message.reply(
-			`I just became a failure, hold up.\n${codeBlock("js", error)}`
+			`I just became a failure, hold up.\n\n${codeBlock("js", error)}`
 		);
+	}
+});
+
+// Discord Interaction Handler (Select Menu)
+client.on("interactionCreate", async (interaction) => {
+	if (!interaction.isSelectMenu()) return;
+
+	if (interaction.customId === "failure_roles_add") {
+		let rolesGiven = "";
+		let rolesRemoved = "";
+
+		interaction.values.forEach(async (value) => {
+			const role = interaction.guild.roles.cache.find(
+				(r) => r.name == value.replaceAll("_", " ")
+			);
+
+			if (role) {
+				if (
+					interaction.member.roles.cache.some(
+						(role) => role.name === value.replaceAll("_", " ")
+					)
+				) {
+					interaction.member.roles.remove(role);
+
+					return (rolesRemoved =
+						rolesRemoved + `\t - ${value.replaceAll("_", " ")}\n`);
+				}
+
+				interaction.member.roles.add(role);
+
+				rolesGiven =
+					rolesGiven + `\t - ${value.replaceAll("_", " ")}\n`;
+			}
+		});
+
+		if (rolesGiven === "") rolesGiven = "\t None";
+		if (rolesRemoved === "") rolesRemoved = "\t None";
+
+		interaction.reply({
+			content: `You have been given the following roles:\n${rolesGiven}\nThe following roles have been removed:\n${rolesRemoved}`,
+			ephemeral: true,
+		});
 	}
 });
 

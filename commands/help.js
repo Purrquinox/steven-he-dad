@@ -6,13 +6,18 @@ module.exports = {
 		name: "help",
 		description: "Need some help?",
 		permission: 0,
-		arguments: null,
+		category: "misc",
+		arguments: ["category"],
 	},
 	async execute(context, client, database) {
 		let commands = "";
 
+		const category = context.arguments[0] || null;
+
 		client.commands.forEach((command) => {
 			if (command.data.name === "help") return;
+
+			if (category && command.data.category !== category) return;
 
 			const name = command.data.name;
 			const description = command.data.description;
@@ -30,10 +35,14 @@ module.exports = {
 					})
 					.join(", ");
 
-				commands += `Name: ${name}\nDescription: ${description}\n\t:lock: Command Permissions: ${permission}\n\t:information_source: Command Arguments: ${arguments}\n\n`;
+				commands += `Name: ${name}\nDescription: ${description}\nCategory: ${command.data.category}\n\t:lock: Command Permissions: ${permission}\n\t:information_source: Command Arguments: ${arguments}\n\n`;
 			} else
-				commands += `Name: ${name}\nDescription: ${description}\n\t:lock: Command Permissions: ${permission}\n\t:information_source: Command Arguments: None\n\n`;
+				commands += `Name: ${name}\nDescription: ${description}\nCategory: ${command.data.category}\n\t:lock: Command Permissions: ${permission}\n\t:information_source: Command Arguments: None\n\n`;
 		});
+
+		if (commands === "")
+			commands =
+				"It seems we don't have any commands matching the filter you provided.";
 
 		const embed = new EmbedBuilder()
 			.setTitle("Failure Help")

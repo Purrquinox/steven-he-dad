@@ -11,22 +11,78 @@
 		"what_da_hell": "https://tenor.com/view/steven-he-what-the-hell-gif-21811925"
 	},
 
-	"level_roles": {
-		"1": "General Failure",
-		"2": "Average Failure",
-		"3": "Moderate Failure",
-		"4": "Experienced Failure",
-		"5": "Epic Failure",
-		"6": "Expert Failure",
-		"7": "SuperStar Failure",
-		"8": "TopNotch Failure",
-		"9": "Failure Legend"
-	},
+	"reaction_roles": [
+		{
+			"name": "Failure Updates",
+			"description": "Updates for the server.",
+			"emoji": "mega"
+		},
+		{
+			"name": "Celebrity Failure",
+			"description": "When you're just too good at being a failure.",
+			"emoji": "sparkles"
+		},
+		{
+			"name": "Fav Failure",
+			"description": "A chill person, Everyone's favorite.",
+			"emoji": "purple_heart"
+		},
+		{
+			"name": "Failure Dev",
+			"description": "A developer that fails a lot.",
+			"emoji": "desktop"
+		},
+		{
+			"name": "Hilarious Failure",
+			"description": "The one who fails and it's funny.",
+			"emoji": "joy"
+		}
+	],
+
+	"level_roles": [
+		{
+			"level": 1,
+			"role": "General Failure"
+		},
+		{
+			"level": 2,
+			"role": "Average Failure"
+		},
+		{
+			"level": 3,
+			"role": "Moderate Failure"
+		},
+		{
+			"level": 4,
+			"role": "Experienced Failure"
+		},
+		{
+			"level": 5,
+			"role": "Epic Failure"
+		},
+		{
+			"level": 6,
+			"role": "Expert Failure"
+		},
+		{
+			"level": 7,
+			"role": "SuperStar Failure"
+		},
+		{
+			"level": 8,
+			"role": "TopNotch Failure"
+		},
+		{
+			"level": 9,
+			"role": "Legend Failure"
+		}
+	],
 
 	"permissions": {
 		"0": "Failure",
-		"1": "Administrator",
-		"2": "Failure_Manager",
-		"3": "Somewhat_Failure_Manager"
+		"1": "Creator",
+		"2": "Administrator",
+		"3": "Failure_Manager",
+		"4": "Somewhat_Failure_Manager"
 	}
 }
