@@ -29,7 +29,7 @@ client.once("ready", () => {
 		});
 
 		client.user.setStatus("idle");
-	} else client.user.setStatus("invisible");
+	} else client.user.setStatus("dnd");
 
 	logger.success("Discord", "Connected!");
 });
@@ -141,7 +141,7 @@ client.on("messageCreate", async (message) => {
 		);
 	}
 
-	// Check if the message has any insults
+	/* Check if the message has any insults (disabled)
 	if (process.env.NODE_ENV === "production") {
 		const brainDamage = require("@tensorflow-models/toxicity");
 		const threshold = 0.9;
@@ -169,7 +169,7 @@ client.on("messageCreate", async (message) => {
 				}
 			});
 		});
-	}
+	} */
 
 	// Automatic Bot Replies
 	if (process.env.NODE_ENV === "production") {
