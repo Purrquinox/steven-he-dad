@@ -11,6 +11,7 @@ const client = new Client({
 		GatewayIntentBits.GuildMembers,
 		GatewayIntentBits.GuildMessages,
 		GatewayIntentBits.MessageContent,
+		GatewayIntentBits.DirectMessages,
 	],
 });
 const fs = require("node:fs");
@@ -73,7 +74,7 @@ client.on("messageCreate", async (message) => {
 		database.User.createUser(message.author.id, message.guild.id, 0);
 
 		message.user.send({
-			content: `Hello fellow failure, thanks for sending your first message in **${message.guild.name}**. You can now earn xp by being active here, and you can always track your xp by doing \`${process.env.PREFIX}user\`.`,
+			content: `Hello fellow failure, thanks for sending your first message in **${message.guild.name}**. You can now earn xp by being active here, and you can always track your xp by doing \`${process.env.PREFIX}level\`.`,
 		});
 	}
 
@@ -111,13 +112,15 @@ client.on("messageCreate", async (message) => {
 
 			// Give the user a server role, if it exists
 			if (level_roles[level]) {
-				let role = message.guild.roles.cache.find((r) => r.name == level_roles[level]);
+				let role = message.guild.roles.cache.find(
+					(r) => r.name == level_roles[level]
+				);
 
 				if (role) {
 					message.member.roles.add(role);
-				};
-			};
-			
+				}
+			}
+
 			// Send Message regarding the level up
 			message.reply({
 				content: `Congrats!\nYou have leveled up to level ${level}!\nYou now need ${xp_to_next_level} XP to level up again.`,

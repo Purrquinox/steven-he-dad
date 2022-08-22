@@ -6,8 +6,16 @@ module.exports = {
 		arguments: null,
 	},
 	async execute(context, client, database) {
-		const ping = Math.round(client.ws.ping);
+		const message = await context.message.reply({
+			content: "Pinging our servers!",
+			fetchReply: true
+		});
 
-		context.message.reply(`WS Ping: ${ping}ms.`);
+		const discord = Math.round(client.ws.ping);
+		const msgLatency = Math.round(message.createdTimestamp - context.message.createdTimestamp);
+
+		message.edit({
+			content: `Discord Websocket Heartbeat: ${discord}ms.\nRoundtrip Latency: ${msgLatency}ms.`,
+		});
 	},
 };
