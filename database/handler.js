@@ -8,7 +8,7 @@ require("dotenv").config();
 // Connect to PostgreSQL database
 const sequelize = new Sequelize({
 	dialect: "postgres",
-	host: "0.0.0.0",
+	host: process.env.PGHOST,
 	username: "select",
 	database: "failuremgmt",
 	password: "password",
