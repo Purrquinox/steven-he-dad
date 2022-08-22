@@ -15,7 +15,7 @@ module.exports = {
 		const msgLatency = Math.round(message.createdTimestamp - context.message.createdTimestamp);
 
 		message.edit({
-			content: `Discord Websocket Heartbeat: ${discord}ms.\nRoundtrip Latency: ${msgLatency}ms.`,
+			content: `Discord Websocket Heartbeat: ${discord}ms.\nDiscord Message Roundtrip Latency: ${msgLatency}ms.`,
 		});
 	},
 };
