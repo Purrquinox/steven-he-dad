@@ -11,7 +11,7 @@
 		"what_da_hell": "https://tenor.com/view/steven-he-what-the-hell-gif-21811925"
 	},
 
-	"reaction_roles": [
+	"failure_roles": [
 		{
 			"name": "Failure Updates",
 			"description": "Updates for the server.",

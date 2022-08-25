@@ -1,4 +1,5 @@
 const { ActionRowBuilder, SelectMenuBuilder } = require("discord.js");
+const { failure_roles } = require("../data.json");
 
 module.exports = {
 	data: {
@@ -9,7 +10,7 @@ module.exports = {
 		arguments: null,
 	},
 	async execute(context, client, database) {
-		const roles = reaction_roles.map((role) => {
+		const roles = failure_roles.map((role) => {
 			return {
 				label: `${role.name}`,
 				description: role.description,

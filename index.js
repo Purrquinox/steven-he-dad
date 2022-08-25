@@ -145,36 +145,6 @@ client.on("messageCreate", async (message) => {
 		);
 	}
 
-	/* Check if the message has any insults (disabled)
-	if (process.env.NODE_ENV === "production") {
-		const brainDamage = require("@tensorflow-models/toxicity");
-		const threshold = 0.9;
-
-		brainDamage.load(threshold).then((model) => {
-			model.classify(message.content).then((results) => {
-				let resultFound = false;
-				let msg = "";
-
-				results.forEach((result) => {
-					if (resultFound) return;
-
-					if (result.results[0].match) {
-						if (result.label === "insult") {
-							msg = memes["emotional_damage"];
-							resultFound = true;
-						}
-					}
-				});
-
-				if (resultFound) {
-					message.reply({
-						content: msg,
-					});
-				}
-			});
-		});
-	} */
-
 	// Automatic Bot Replies
 	if (process.env.NODE_ENV === "production") {
 		const content = message.content.toLowerCase();
@@ -201,7 +171,7 @@ client.on("messageCreate", async (message) => {
 
 	if (!command) return;
 
-	if (user.dataValues.permission < command.data.permission)
+	if (user.dataValues.permission <= command.data.permission)
 		return message.reply({
 			content: `You do not have enough permissions to use this command.\nCommand Permissions: ${commandPermissions}\nYour Permissions: ${userPermissions}`,
 		});
