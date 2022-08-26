@@ -287,4 +287,5 @@ client.on("guildMemberRemove", (member) => {
 });
 
 // Login to Discord
-client.login(process.env.TOKEN);
+if (process.env.NODE_ENV === "production") client.login(process.env.TOKEN);
+else if (process.env.NODE_ENV === "canary") client.login(process.env.CANARY_TOKEN); 
