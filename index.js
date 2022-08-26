@@ -76,7 +76,7 @@ client.on("messageCreate", async (message) => {
 		if (mentionedUser) {
 			if (mentionedUser.afk === true)
 				return message.reply(
-					`${mention.username} seems to be afk, and may take longer to respond!`
+					`${mention.username} seems to be afk, at this time.`
 				);
 		}
 	}
