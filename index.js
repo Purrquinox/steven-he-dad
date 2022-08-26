@@ -63,6 +63,24 @@ client.on("messageCreate", async (message) => {
 	// Block DMs
 	if (message.channel.type === "dm") return;
 
+	// Check if the user mentioned anyone
+	const mention = message.mentions.users.first();
+
+	if (mention) {
+		// Check database to see if the mentioned user is marked as afk
+		const mentionedUser = await database.User.getUser(
+			mention.id,
+			message.guild.id
+		);
+
+		if (mentionedUser) {
+			if (mentionedUser.afk === true)
+				return message.reply(
+					`${mention.username} seems to be afk, and may take longer to respond!`
+				);
+		}
+	}
+
 	// Get Message Author from Database
 	const user = await database.User.getUser(
 		message.author.id,
