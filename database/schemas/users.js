@@ -37,6 +37,10 @@ const schema = {
 			type: DataTypes.DATE,
 		},
 	},
+
+	afk: {
+		type: DataTypes.BOOLEAN,
+	},
 };
 
 module.exports = {
