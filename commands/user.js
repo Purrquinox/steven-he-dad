@@ -66,6 +66,11 @@ module.exports = {
 						inline: true,
 					},
 					{
+						name: "AFK",
+						value: String(user.data.afk),
+						inline: true,
+					},
+					{
 						name: "Level:",
 						value: String(user.data.levels.level),
 						inline: true,
