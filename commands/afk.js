@@ -17,7 +17,7 @@ module.exports = {
 					true
 				);
 
-				return message.reply(
+				return context.message.reply(
 					"Success!\nYour AFK Status has been set to `true`"
 				);
 			}
@@ -29,15 +29,15 @@ module.exports = {
 					false
 				);
 
-				return message.reply(
+				return context.message.reply(
 					"Success!\nYour AFK Status has been set to `false`"
 				);
 			} else
-				return message.reply(
+				return context.message.reply(
 					"Error: Invalid Option. You must specify `true` or `false` for your AFK status."
 				);
 		} else
-			return message.reply(
+			return context.message.reply(
 				"Error: Invalid Option. You did not specify anything for `status` which can be `true` or `false`."
 			);
 	},
