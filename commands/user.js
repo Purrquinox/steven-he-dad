@@ -66,7 +66,7 @@ module.exports = {
 						inline: true,
 					},
 					{
-						name: "AFK",
+						name: "AFK:",
 						value: String(user.data.afk),
 						inline: true,
 					},
