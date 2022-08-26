@@ -79,10 +79,10 @@
 	],
 
 	"permissions": {
-		"0": "Failure",
-		"1": "Creator",
-		"2": "Administrator",
+		"4": "Somewhat_Failure_Manager",
 		"3": "Failure_Manager",
-		"4": "Somewhat_Failure_Manager"
+		"2": "Administrator",
+		"1": "Creator",
+		"0": "Failure"
 	}
 }
