@@ -9,7 +9,7 @@ require("dotenv").config();
 const sequelize = new Sequelize({
 	dialect: "postgres",
 	host: process.env.PGHOST,
-	username: "select",
+	username: "failuremgmt",
 	database: "failuremgmt",
 	password: "password",
 	port: 7399,
