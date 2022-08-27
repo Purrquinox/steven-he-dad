@@ -4,6 +4,7 @@ const {
 	GatewayIntentBits,
 	ActivityType,
 	codeBlock,
+	EmbedBuilder,
 } = require("discord.js");
 const client = new Client({
 	intents: [
@@ -74,7 +75,7 @@ client.on("messageCreate", async (message) => {
 
 		if (mentionedUser) {
 			if (mentionedUser.afk === true)
-				return message.reply(
+				message.reply(
 					`${mention.username} seems to be afk, at this time.`
 				);
 		}
@@ -88,14 +89,13 @@ client.on("messageCreate", async (message) => {
 
 	// Add Message Author to Database (if not already in database)
 	if (!user) {
-		database.User.createUser(message.author.id, message.guild.id, 0);
+		database.User.createUser(message.author.id, message.guild.id);
 
 		const channel = message.guild.channels.cache.find(
 			(channel) => channel.name === "level-updates"
 		);
-		if (!channel) return;
 
-		channel.send({
+		if (channel) channel.send({
 			content: `Hello <@${message.author.id}>, thanks for sending your first message in **${message.guild.name}**. You can now earn xp by being active here, and you can always track your xp by doing \`${process.env.PREFIX}level\`.`,
 		});
 	}
@@ -113,14 +113,13 @@ client.on("messageCreate", async (message) => {
 
 		// If the user's last XP update was 1 day ago or more, randomize the xp
 		if (currentDate >= 1) {
-			xp = Math.floor(Math.random() * 10) + 1;
+			xp = Math.floor(Math.random() * 20) + 1;
 
 			const channel = message.guild.channels.cache.find(
 				(channel) => channel.name === "level-updates"
 			);
-			if (!channel) return;
 
-			channel.send({
+			if (channel) channel.send({
 				content: `Congrats, <@${message.author.id}>!\nYou have claimed the Daily Double, and now have ${xp} XP.`,
 			});
 		} else xp = xp + 1;
@@ -150,9 +149,8 @@ client.on("messageCreate", async (message) => {
 			const channel = message.guild.channels.cache.find(
 				(channel) => channel.name === "level-updates"
 			);
-			if (!channel) return;
 
-			channel.send({
+			if (channel) channel.send({
 				content: `Congrats, <@${message.author.id}>!\nYou have leveled up to level ${level}!\nYou now need ${xp_to_next_level} XP to level up again.`,
 			});
 		}
@@ -161,7 +159,6 @@ client.on("messageCreate", async (message) => {
 		database.User.updateUser(
 			user.user_id,
 			user.server_id,
-			user.permission,
 			{
 				level: level,
 				xp: xp,
@@ -196,11 +193,6 @@ client.on("messageCreate", async (message) => {
 	const command = client.commands.get(commandName);
 
 	if (!command) return;
-
-	if (user.dataValues.permission <= command.data.permission)
-		return message.reply({
-			content: `You do not have enough permissions to use this command.\nCommand Permissions: ${commandPermissions}\nYour Permissions: ${userPermissions}`,
-		});
 
 	try {
 		const context = {
@@ -267,15 +259,21 @@ client.on("guildMemberAdd", (member) => {
 	const channel = member.guild.channels.cache.find(
 		(channel) => channel.name === "welcome"
 	);
-	if (!channel) return;
 
-	client.channels.cache.get(channel.id).send(memes["failure_management"]);
-	client.channels.cache.get(channel.id).send(`<@${member.id}>`);
+	if (channel) {
+		const embed = new EmbedBuilder()
+			.setTitle(`Welcome to ${member.guild.name}`)
+			.setImage(memes["failure_management"]);
+		
+		channel.send({
+			content: `<@${member.id}>`,
+			embeds: [embed]
+		});
+	}
 
 	// Assign failure role (if exists)
 	let role = member.guild.roles.cache.find((r) => r.name == "failures");
-	if (!role) return;
-	member.roles.add(role);
+	if (role) member.roles.add(role);
 });
 
 // Discord Server Member Leave Event
@@ -285,11 +283,8 @@ client.on("guildMemberRemove", (member) => {
 	const channel = member.guild.channels.cache.find(
 		(channel) => channel.name === "welcome"
 	);
-	if (!channel) return;
 
-	client.channels.cache
-		.get(channel.id)
-		.send(
+	if (channel) channel.send(
 			`${member.user.username}#${member.user.discriminator} has left the server!`
 		);
 });
