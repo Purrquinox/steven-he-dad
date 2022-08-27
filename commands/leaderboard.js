@@ -2,7 +2,6 @@ module.exports = {
 	data: {
 		name: "leaderboard",
 		description: "View the server leaderboard.",
-		permission: 0,
 		category: "levels",
 		arguments: null,
 	},

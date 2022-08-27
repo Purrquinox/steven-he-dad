@@ -2,7 +2,6 @@ module.exports = {
 	data: {
 		name: "level",
 		description: "Check your level/xp.",
-		permission: 0,
 		category: "levels",
 		arguments: ["failure"],
 	},

@@ -1,11 +1,9 @@
 const { EmbedBuilder } = require("discord.js");
-const { permissions } = require("../data.json");
 
 module.exports = {
 	data: {
 		name: "user",
 		description: "Get information about a failure.",
-		permission: 0,
 		category: "failure",
 		arguments: ["failure"],
 	},
@@ -58,30 +56,17 @@ module.exports = {
 						inline: true,
 					},
 					{
-						name: "Permission Name (Number):",
-						value: `${permissions[user.data.permission].replaceAll(
-							"_",
-							" "
-						)} (${user.data.permission})`,
-						inline: true,
-					},
-					{
 						name: "AFK:",
 						value: String(user.data.afk),
 						inline: true,
 					},
 					{
-						name: "Level:",
-						value: String(user.data.levels.level),
-						inline: true,
-					},
-					{
-						name: "XP:",
-						value: `${String(user.data.levels.xp)}/${String(
+						name: "Leveling:",
+						value: `\t- Level: ${String(user.data.levels.level)}\n\t- XP: ${String(user.data.levels.xp)}/${String(
 							user.data.levels.xp_to_next_level
 						)}`,
 						inline: true,
-					}
+					},
 				)
 				.setFooter({
 					text: `This command was executed by ${context.message.author.username}#${context.message.author.discriminator}.`,

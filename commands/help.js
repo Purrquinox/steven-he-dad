@@ -1,11 +1,9 @@
 const { EmbedBuilder } = require("discord.js");
-const { permissions } = require("../data.json");
 
 module.exports = {
 	data: {
 		name: "help",
 		description: "Need some help?",
-		permission: 0,
 		category: "misc",
 		arguments: ["category"],
 	},
@@ -22,10 +20,6 @@ module.exports = {
 			const name = command.data.name;
 			const description = command.data.description;
 
-			let permission = `${permissions[command.data.permission].replaceAll(
-				"_",
-				" "
-			)}+`;
 			let arguments;
 
 			if (command.data.arguments) {
@@ -35,9 +29,9 @@ module.exports = {
 					})
 					.join(", ");
 
-				commands += `Name: ${name}\nDescription: ${description}\nCategory: ${command.data.category}\n\t:lock: Command Permissions: ${permission}\n\t:information_source: Command Arguments: ${arguments}\n\n`;
+				commands += `Name: ${name}\nDescription: ${description}\nCategory: ${command.data.category}\n\t:information_source: Command Arguments: ${arguments}\n\n`;
 			} else
-				commands += `Name: ${name}\nDescription: ${description}\nCategory: ${command.data.category}\n\t:lock: Command Permissions: ${permission}\n\t:information_source: Command Arguments: None\n\n`;
+				commands += `Name: ${name}\nDescription: ${description}\nCategory: ${command.data.category}\n\t:information_source: Command Arguments: None\n\n`;
 		});
 
 		if (commands === "")

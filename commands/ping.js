@@ -2,7 +2,6 @@ module.exports = {
 	data: {
 		name: "ping",
 		description: "Check my Ping!",
-		permission: 0,
 		category: "misc",
 		arguments: null,
 	},
