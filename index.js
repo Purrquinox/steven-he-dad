@@ -199,7 +199,7 @@ client.on("messageCreate", async (message) => {
 			arguments: args,
 		};
 
-		await command.execute(context, client, database);
+		await command.execute(context, client, EmbedBuilder, database);
 	} catch (error) {
 		logger.error(`Command (${commandName})`, error);
 
