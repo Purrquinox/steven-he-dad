@@ -11,7 +11,7 @@ const client = new Client({
 		GatewayIntentBits.Guilds,
 		GatewayIntentBits.GuildMembers,
 		GatewayIntentBits.GuildMessages,
-		GatewayIntentBits.MessageContent
+		GatewayIntentBits.MessageContent,
 	],
 });
 const fs = require("node:fs");
@@ -95,9 +95,10 @@ client.on("messageCreate", async (message) => {
 			(channel) => channel.name === "level-updates"
 		);
 
-		if (channel) channel.send({
-			content: `Hello <@${message.author.id}>, thanks for sending your first message in **${message.guild.name}**. You can now earn xp by being active here, and you can always track your xp by doing \`${process.env.PREFIX}level\`.`,
-		});
+		if (channel)
+			channel.send({
+				content: `Hello <@${message.author.id}>, thanks for sending your first message in **${message.guild.name}**. You can now earn xp by being active here, and you can always track your xp by doing \`${process.env.PREFIX}level\`.`,
+			});
 	}
 
 	// Leveling System
@@ -119,9 +120,10 @@ client.on("messageCreate", async (message) => {
 				(channel) => channel.name === "level-updates"
 			);
 
-			if (channel) channel.send({
-				content: `Congrats, <@${message.author.id}>!\nYou have claimed the Daily Double, and now have ${xp} XP.`,
-			});
+			if (channel)
+				channel.send({
+					content: `Congrats, <@${message.author.id}>!\nYou have claimed the Daily Double, and now have ${xp} XP.`,
+				});
 		} else xp = xp + 1;
 
 		// Check if the new XP is above the XP needed for the next level
@@ -150,22 +152,19 @@ client.on("messageCreate", async (message) => {
 				(channel) => channel.name === "level-updates"
 			);
 
-			if (channel) channel.send({
-				content: `Congrats, <@${message.author.id}>!\nYou have leveled up to level ${level}!\nYou now need ${xp_to_next_level} XP to level up again.`,
-			});
+			if (channel)
+				channel.send({
+					content: `Congrats, <@${message.author.id}>!\nYou have leveled up to level ${level}!\nYou now need ${xp_to_next_level} XP to level up again.`,
+				});
 		}
 
 		// Update the user's level in the database
-		database.User.updateUser(
-			user.user_id,
-			user.server_id,
-			{
-				level: level,
-				xp: xp,
-				lastXPUpdate: new Date(),
-				xp_to_next_level: xp_to_next_level,
-			}
-		);
+		database.User.updateUser(user.user_id, user.server_id, {
+			level: level,
+			xp: xp,
+			lastXPUpdate: new Date(),
+			xp_to_next_level: xp_to_next_level,
+		});
 	}
 
 	// Automatic Bot Replies
@@ -264,10 +263,10 @@ client.on("guildMemberAdd", (member) => {
 		const embed = new EmbedBuilder()
 			.setTitle(`Welcome to ${member.guild.name}`)
 			.setImage(memes["failure_management"]);
-		
+
 		channel.send({
 			content: `<@${member.id}>`,
-			embeds: [embed]
+			embeds: [embed],
 		});
 	}
 
@@ -284,7 +283,8 @@ client.on("guildMemberRemove", (member) => {
 		(channel) => channel.name === "welcome"
 	);
 
-	if (channel) channel.send(
+	if (channel)
+		channel.send(
 			`${member.user.username}#${member.user.discriminator} has left the server!`
 		);
 });
