@@ -62,11 +62,13 @@ module.exports = {
 					},
 					{
 						name: "Leveling:",
-						value: `\t- Level: ${String(user.data.levels.level)}\n\t- XP: ${String(user.data.levels.xp)}/${String(
+						value: `\t- Level: ${String(
+							user.data.levels.level
+						)}\n\t- XP: ${String(user.data.levels.xp)}/${String(
 							user.data.levels.xp_to_next_level
 						)}`,
 						inline: true,
-					},
+					}
 				)
 				.setFooter({
 					text: `This command was executed by ${context.message.author.username}#${context.message.author.discriminator}.`,
