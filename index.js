@@ -17,8 +17,8 @@ const client = new Client({
 const fs = require("node:fs");
 const database = require("./database/handler");
 const { words, memes, level_roles } = require("./data.json");
-const logger = require("./logger");
 const moment = require("moment");
+const logger = require("./logger");
 require("dotenv").config();
 
 // Discord Ready Event
