@@ -10,8 +10,7 @@ const client = new Client({
 		GatewayIntentBits.Guilds,
 		GatewayIntentBits.GuildMembers,
 		GatewayIntentBits.GuildMessages,
-		GatewayIntentBits.MessageContent,
-		GatewayIntentBits.DirectMessages,
+		GatewayIntentBits.MessageContent
 	],
 });
 const fs = require("node:fs");
@@ -63,6 +62,24 @@ client.on("messageCreate", async (message) => {
 	// Block DMs
 	if (message.channel.type === "dm") return;
 
+	// Check if the user mentioned anyone
+	const mention = message.mentions.users.first();
+
+	if (mention) {
+		// Check database to see if the mentioned user is marked as afk
+		const mentionedUser = await database.User.getUser(
+			mention.id,
+			message.guild.id
+		);
+
+		if (mentionedUser) {
+			if (mentionedUser.afk === true)
+				return message.reply(
+					`${mention.username} seems to be afk, at this time.`
+				);
+		}
+	}
+
 	// Get Message Author from Database
 	const user = await database.User.getUser(
 		message.author.id,
@@ -73,15 +90,14 @@ client.on("messageCreate", async (message) => {
 	if (!user) {
 		database.User.createUser(message.author.id, message.guild.id, 0);
 
-		message.author
-			.send({
-				content: `Hello fellow failure, thanks for sending your first message in **${message.guild.name}**. You can now earn xp by being active here, and you can always track your xp by doing \`${process.env.PREFIX}level\`.`,
-			})
-			.catch((error) => {
-				message.reply({
-					content: `Hello fellow failure, thanks for sending your first message in **${message.guild.name}**. You can now earn xp by being active here, and you can always track your xp by doing \`${process.env.PREFIX}level\`.`,
-				});
-			});
+		const channel = message.guild.channels.cache.find(
+			(channel) => channel.name === "level-updates"
+		);
+		if (!channel) return;
+
+		channel.send({
+			content: `Hello <@${message.author.id}>, thanks for sending your first message in **${message.guild.name}**. You can now earn xp by being active here, and you can always track your xp by doing \`${process.env.PREFIX}level\`.`,
+		});
 	}
 
 	// Leveling System
@@ -99,8 +115,13 @@ client.on("messageCreate", async (message) => {
 		if (currentDate >= 1) {
 			xp = Math.floor(Math.random() * 10) + 1;
 
-			message.reply({
-				content: `Congrats!\nYou have won the Daily Double, and now have ${xp} XP.`,
+			const channel = message.guild.channels.cache.find(
+				(channel) => channel.name === "level-updates"
+			);
+			if (!channel) return;
+
+			channel.send({
+				content: `Congrats, <@${message.author.id}>!\nYou have claimed the Daily Double, and now have ${xp} XP.`,
 			});
 		} else xp = xp + 1;
 
@@ -126,8 +147,13 @@ client.on("messageCreate", async (message) => {
 			}
 
 			// Send Message regarding the level up
-			message.reply({
-				content: `Congrats!\nYou have leveled up to level ${level}!\nYou now need ${xp_to_next_level} XP to level up again.`,
+			const channel = message.guild.channels.cache.find(
+				(channel) => channel.name === "level-updates"
+			);
+			if (!channel) return;
+
+			channel.send({
+				content: `Congrats, <@${message.author.id}>!\nYou have leveled up to level ${level}!\nYou now need ${xp_to_next_level} XP to level up again.`,
 			});
 		}
 
@@ -269,4 +295,6 @@ client.on("guildMemberRemove", (member) => {
 });
 
 // Login to Discord
-client.login(process.env.TOKEN);
+if (process.env.NODE_ENV === "production") client.login(process.env.TOKEN);
+else if (process.env.NODE_ENV === "canary")
+	client.login(process.env.CANARY_TOKEN);

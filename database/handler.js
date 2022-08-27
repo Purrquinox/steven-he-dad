@@ -62,8 +62,9 @@ class User extends Model {
 				level: 1,
 				xp: 0,
 				lastXPUpdate: new Date(),
-				xp_to_next_level: 50,
+				xp_to_next_level: 150,
 			},
+			afk: false,
 		});
 
 		User.sync();
@@ -76,6 +77,24 @@ class User extends Model {
 			{
 				permission: permission,
 				levels: levels,
+			},
+			{
+				where: {
+					user_id: user_id,
+					server_id: server_id,
+				},
+			}
+		);
+
+		User.sync();
+
+		return data;
+	}
+
+	static async setAFK(user_id, server_id, afk) {
+		const data = await User.update(
+			{
+				afk: afk,
 			},
 			{
 				where: {
