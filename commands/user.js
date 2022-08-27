@@ -1,5 +1,3 @@
-const { EmbedBuilder } = require("discord.js");
-
 module.exports = {
 	data: {
 		name: "user",
@@ -7,7 +5,7 @@ module.exports = {
 		category: "failure",
 		arguments: ["failure"],
 	},
-	async execute(context, client, database) {
+	async execute(context, client, EmbedBuilder, database) {
 		let user;
 		const mention = context.message.mentions.users.first();
 

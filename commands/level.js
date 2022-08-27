@@ -5,7 +5,7 @@ module.exports = {
 		category: "levels",
 		arguments: ["failure"],
 	},
-	async execute(context, client, database) {
+	async execute(context, client, EmbedBuilder, database) {
 		let user;
 		const mention = context.message.mentions.users.first();
 

@@ -1,5 +1,3 @@
-const { EmbedBuilder } = require("discord.js");
-
 module.exports = {
 	data: {
 		name: "help",
@@ -7,7 +5,7 @@ module.exports = {
 		category: "misc",
 		arguments: ["category"],
 	},
-	async execute(context, client, database) {
+	async execute(context, client, EmbedBuilder, database) {
 		let commands = "";
 
 		const category = context.arguments[0] || null;

@@ -1,5 +1,3 @@
-const { EmbedBuilder } = require("discord.js");
-
 module.exports = {
 	data: {
 		name: "leaderboard",
@@ -7,7 +5,7 @@ module.exports = {
 		category: "levels",
 		arguments: null,
 	},
-	async execute(context, client, database) {
+	async execute(context, client, EmbedBuilder, database) {
 		let leaderboard = "";
 
 		const users = await database.User.getAllUsersByServer(

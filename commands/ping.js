@@ -5,7 +5,7 @@ module.exports = {
 		category: "misc",
 		arguments: null,
 	},
-	async execute(context, client, database) {
+	async execute(context, client, EmbedBuilder, database) {
 		const message = await context.message.reply({
 			content: "Pinging our servers!",
 			fetchReply: true,
@@ -16,8 +16,24 @@ module.exports = {
 			message.createdTimestamp - context.message.createdTimestamp
 		);
 
+		const embed = new EmbedBuilder()
+			.setTitle("Pong!")
+			.setColor(0xff0000)
+			.setFields(
+				{
+					name: "Discord Websocket Hearbeat:",
+					value: `${discord}ms`,
+					inline: true,
+				},
+				{
+					name: "Discord Message Roundtrip Latency:",
+					value: `${msgLatency}ms`,
+					inline: true,
+				}
+			);
+
 		message.edit({
-			content: `Discord Websocket Heartbeat: ${discord}ms.\nDiscord Message Roundtrip Latency: ${msgLatency}ms.`,
+			embeds: [embed],
 		});
 	},
 };
