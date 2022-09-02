@@ -14,10 +14,6 @@ const schema = {
 		primaryKey: true,
 	},
 
-	permission: {
-		type: DataTypes.NUMBER,
-	},
-
 	levels: {
 		type: DataTypes.JSON,
 

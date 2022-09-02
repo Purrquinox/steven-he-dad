@@ -52,12 +52,11 @@ class User extends Model {
 		return data;
 	}
 
-	static async createUser(user_id, server_id, permission) {
+	static async createUser(user_id, server_id) {
 		const data = await User.create({
 			user_id: user_id,
 			server_id: server_id,
 			uuid: crypto.randomUUID(),
-			permission: permission,
 			levels: {
 				level: 1,
 				xp: 0,
@@ -72,10 +71,9 @@ class User extends Model {
 		return data;
 	}
 
-	static async updateUser(user_id, server_id, permission, levels) {
+	static async updateUser(user_id, server_id, levels) {
 		const data = await User.update(
 			{
-				permission: permission,
 				levels: levels,
 			},
 			{

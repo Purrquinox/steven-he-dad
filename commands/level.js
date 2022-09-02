@@ -2,11 +2,10 @@ module.exports = {
 	data: {
 		name: "level",
 		description: "Check your level/xp.",
-		permission: 0,
 		category: "levels",
 		arguments: ["failure"],
 	},
-	async execute(context, client, database) {
+	async execute(context, client, EmbedBuilder, database) {
 		let user;
 		const mention = context.message.mentions.users.first();
 

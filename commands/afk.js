@@ -2,11 +2,10 @@ module.exports = {
 	data: {
 		name: "afk",
 		description: "Set your AFK status",
-		permission: 0,
 		category: "failure",
 		arguments: ["status"],
 	},
-	async execute(context, client, database) {
+	async execute(context, client, EmbedBuilder, database) {
 		const status = context.arguments[0] || null;
 
 		if (status) {
