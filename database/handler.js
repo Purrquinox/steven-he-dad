@@ -138,6 +138,8 @@ const init = () => {
 		sequelize: sequelize,
 		modelName: schemaData["users"].name,
 	});
+
+        sequelize.sync();
 };
 
 init();
