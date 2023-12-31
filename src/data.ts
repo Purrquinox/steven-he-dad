@@ -2,6 +2,7 @@ const words = {
 	drugs: "Don't do drugs, too expensive",
 	nightmare: "i agree, that is a nightmare",
 	failure: "You are a failure",
+	"son of a": "failure",
 };
 
 const memes = {
