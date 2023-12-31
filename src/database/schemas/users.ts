@@ -1,4 +1,4 @@
-const { DataTypes } = require("sequelize");
+import { DataTypes } from "sequelize";
 
 const schema = {
 	user_id: {
@@ -39,7 +39,7 @@ const schema = {
 	},
 };
 
-module.exports = {
+export default {
 	name: "users",
 	schema: schema,
 };

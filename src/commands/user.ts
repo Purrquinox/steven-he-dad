@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	data: {
 		name: "user",
 		description: "Get information about a failure.",

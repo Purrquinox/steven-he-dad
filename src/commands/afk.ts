@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	data: {
 		name: "afk",
 		description: "Set your AFK status",

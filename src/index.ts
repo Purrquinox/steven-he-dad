@@ -1,11 +1,26 @@
 // Packages
-const {
+import {
 	Client,
 	GatewayIntentBits,
 	ActivityType,
 	codeBlock,
 	EmbedBuilder,
-} = require("discord.js");
+	Collection,
+	ChannelType,
+	GuildMemberRoleManager,
+} from "discord.js";
+import fs from "node:fs";
+import * as database from "./database/handler.js";
+import { words, memes, level_roles } from "./data.js";
+import moment from "moment";
+import * as logger from "./logger.js";
+import * as dotenv from "dotenv";
+import * as path from "path";
+
+// Configure dotenv
+dotenv.config();
+
+// Discord Client
 const client = new Client({
 	intents: [
 		GatewayIntentBits.Guilds,
@@ -14,45 +29,61 @@ const client = new Client({
 		GatewayIntentBits.MessageContent,
 	],
 });
-const fs = require("node:fs");
-const database = require("./database/handler");
-const { words, memes, level_roles } = require("./data.json");
-const moment = require("moment");
-const logger = require("./logger");
-require("dotenv").config();
 
 // Discord Ready Event
 client.once("ready", () => {
 	if (process.env.NODE_ENV === "production") {
-		client.user.setActivity(`all failures`, {
+		client.user?.setActivity(`all failures`, {
 			type: ActivityType.Watching,
 		});
 
-		client.user.setStatus("idle");
-	} else client.user.setStatus("dnd");
+		client.user?.setStatus("idle");
+	} else client.user?.setStatus("dnd");
 
 	logger.success("Discord", "Connected!");
 });
 
 // Discord Debug Event
 client.on("debug", (info) => {
-	logger.info("Discord Debug", info);
+	logger.debug("Discord", info);
 });
 
 // Discord Error Event
 client.on("error", (error) => {
-	logger.error("Discord Error", error);
+	logger.error("Discord", error.toString());
 });
 
 // Commands
-client.commands = new Map();
-const commandFiles = fs
-	.readdirSync("./commands")
-	.filter((file) => file.endsWith(".js"));
+const getFilesInDirectory = (dir: string) => {
+	let files: string[] = [];
+	const filesInDir = fs.readdirSync(dir);
 
-for (const file of commandFiles) {
-	const command = require(`./commands/${file}`);
-	client.commands.set(command.data.name, command);
+	for (const file of filesInDir) {
+		const filePath = path.join(dir, file);
+		const stat = fs.statSync(filePath);
+
+		if (stat.isDirectory())
+			files = files.concat(getFilesInDirectory(filePath));
+		else files.push(filePath);
+	}
+
+	return files;
+};
+
+const apiEndpointsFiles = getFilesInDirectory("./dist/commands").filter(
+	(file) => file.endsWith(".js")
+);
+
+client.commands = new Collection();
+for (const file of apiEndpointsFiles) {
+	import(`../${file}`)
+		.then((module) => {
+			const i = module.default;
+			client.commands.set(i.data.name, i);
+		})
+		.catch((error) => {
+			console.error(`Error importing ${file}: ${error}`);
+		});
 }
 
 // Discord Server Message Event
@@ -61,7 +92,7 @@ client.on("messageCreate", async (message) => {
 	if (message.author.bot || message.author.system) return;
 
 	// Block DMs
-	if (message.channel.type === "dm") return;
+	if (message.channel.type === ChannelType.DM) return;
 
 	// Check if the user mentioned anyone
 	const mention = message.mentions.users.first();
@@ -70,7 +101,7 @@ client.on("messageCreate", async (message) => {
 		// Check database to see if the mentioned user is marked as afk
 		const mentionedUser = await database.User.getUser(
 			mention.id,
-			message.guild.id
+			message.guild?.id
 		);
 
 		if (mentionedUser) {
@@ -84,20 +115,20 @@ client.on("messageCreate", async (message) => {
 	// Get Message Author from Database
 	const user = await database.User.getUser(
 		message.author.id,
-		message.guild.id
+		message.guild?.id
 	);
 
 	// Add Message Author to Database (if not already in database)
 	if (!user) {
-		database.User.createUser(message.author.id, message.guild.id);
+		database.User.createUser(message.author.id, message.guild?.id);
 
-		const channel = message.guild.channels.cache.find(
+		const channel: any = message.guild?.channels.cache.find(
 			(channel) => channel.name === "level-updates"
 		);
 
 		if (channel)
-			channel.send({
-				content: `Hello <@${message.author.id}>, thanks for sending your first message in **${message.guild.name}**. You can now earn xp by being active here, and you can always track your xp by doing \`${process.env.PREFIX}level\`.`,
+			channel?.send({
+				content: `Hello <@${message.author.id}>, thanks for sending your first message in **${message.guild?.name}**. You can now earn xp by being active here, and you can always track your xp by doing \`${process.env.PREFIX}level\`.`,
 			});
 	}
 
@@ -116,13 +147,13 @@ client.on("messageCreate", async (message) => {
 		if (currentDate >= 1) {
 			xp = Math.floor(Math.random() * 20) + 1;
 
-			const channel = message.guild.channels.cache.find(
+			const channel: any = message.guild?.channels.cache.find(
 				(channel) => channel.name === "level-updates"
 			);
 
 			if (channel)
-				channel.send({
-					content: `Congrats, <@${message.author.id}>!\nYou have claimed the Daily Double, and now have ${xp} XP.`,
+				channel?.send({
+					content: `Congrats, <@${message.author?.id}>!\nYou have claimed the Daily Double, and now have ${xp} XP.`,
 				});
 		} else xp = xp + 1;
 
@@ -140,21 +171,23 @@ client.on("messageCreate", async (message) => {
 
 			// Give the user a server role, if it exists
 			if (level_roles[level]) {
-				let role = message.guild.roles.cache.find(
-					(r) => r.name == level_roles[level]
+				let role = message.guild?.roles.cache.find(
+					(r) =>
+						r.name ==
+						level_roles.find((o) => o.level === level)?.role
 				);
 
-				if (role) message.member.roles.add(role);
+				if (role) message.member?.roles.add(role);
 			}
 
 			// Send Message regarding the level up
-			const channel = message.guild.channels.cache.find(
+			const channel: any = message.guild?.channels.cache.find(
 				(channel) => channel.name === "level-updates"
 			);
 
 			if (channel)
-				channel.send({
-					content: `Congrats, <@${message.author.id}>!\nYou have leveled up to level ${level}!\nYou now need ${xp_to_next_level} XP to level up again.`,
+				channel?.send({
+					content: `Congrats, <@${message.author?.id}>!\nYou have leveled up to level ${level}!\nYou now need ${xp_to_next_level} XP to level up again.`,
 				});
 		}
 
@@ -186,9 +219,11 @@ client.on("messageCreate", async (message) => {
 	}
 
 	// Commands
-	if (!message.content.startsWith(process.env.PREFIX)) return;
-	const args = message.content.slice(process.env.PREFIX.length).split(/ +/);
-	const commandName = args.shift().toLowerCase();
+	if (!message.content.startsWith(process.env.PREFIX || ".")) return;
+	const args = message.content
+		.slice((process.env.PREFIX || ".").length)
+		.split(/ +/);
+	const commandName = args.shift()?.toLowerCase();
 	const command = client.commands.get(commandName);
 
 	if (!command) return;
@@ -211,33 +246,36 @@ client.on("messageCreate", async (message) => {
 
 // Discord Interaction Handler (Select Menu)
 client.on("interactionCreate", async (interaction) => {
-	if (!interaction.isSelectMenu()) return;
+	if (!interaction.isStringSelectMenu()) return;
 
 	if (interaction.customId === "failure_roles_add") {
 		let rolesGiven = "";
 		let rolesRemoved = "";
 
 		interaction.values.forEach(async (value) => {
-			const role = interaction.guild.roles.cache.find(
-				(r) => r.name == value.replaceAll("_", " ")
+			const role = interaction.guild?.roles.cache.find(
+				(r) => r.name == value.replace(/_/g, "")
 			);
 
 			if (role) {
 				if (
-					interaction.member.roles.cache.some(
-						(role) => role.name === value.replaceAll("_", " ")
+					(
+						interaction.member?.roles as GuildMemberRoleManager
+					).cache.some(
+						(role) => role.name === value.replace(/_/g, "")
 					)
 				) {
-					interaction.member.roles.remove(role);
+					(
+						interaction.member?.roles as GuildMemberRoleManager
+					).remove(role);
 
 					return (rolesRemoved =
-						rolesRemoved + `\t - ${value.replaceAll("_", " ")}\n`);
+						rolesRemoved + `\t - ${value.replace(/_/g, "")}\n`);
 				}
 
-				interaction.member.roles.add(role);
+				(interaction.member?.roles as GuildMemberRoleManager).add(role);
 
-				rolesGiven =
-					rolesGiven + `\t - ${value.replaceAll("_", " ")}\n`;
+				rolesGiven = rolesGiven + `\t - ${value.replace(/_/g, "")}\n`;
 			}
 		});
 
@@ -253,9 +291,9 @@ client.on("interactionCreate", async (interaction) => {
 
 // Discord Server Member Join Event
 client.on("guildMemberAdd", (member) => {
-	if (!process.env.NODE_ENV === "production") return;
+	if (!process.env.NODE_ENV || "production" === "production") return;
 
-	const channel = member.guild.channels.cache.find(
+	const channel: any = member.guild.channels.cache.find(
 		(channel) => channel.name === "welcome"
 	);
 
@@ -264,7 +302,7 @@ client.on("guildMemberAdd", (member) => {
 			.setTitle(`Welcome to ${member.guild.name}`)
 			.setImage(memes["failure_management"]);
 
-		channel.send({
+		channel?.send({
 			content: `<@${member.id}>`,
 			embeds: [embed],
 		});
@@ -277,13 +315,13 @@ client.on("guildMemberAdd", (member) => {
 
 // Discord Server Member Leave Event
 client.on("guildMemberRemove", (member) => {
-	if (!process.env.NODE_ENV === "production") return;
+	if (!process.env.NODE_ENV || "production" === "production") return;
 
-	const channel = member.guild.channels.cache.find(
+	const channel: any = member.guild.channels.cache.find(
 		(channel) => channel.name === "welcome"
 	);
 
-	if (channel) channel.send(`${member.user.username} has left the server!`);
+	if (channel) channel?.send(`${member.user.username} has left the server!`);
 });
 
 // Login to Discord

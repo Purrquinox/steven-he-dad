@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	data: {
 		name: "help",
 		description: "Need some help?",
@@ -18,16 +18,14 @@ module.exports = {
 			const name = command.data.name;
 			const description = command.data.description;
 
-			let arguments;
-
 			if (command.data.arguments) {
-				arguments = command.data.arguments
+				let args: string = command.data.arguments
 					.map((arg) => {
 						return `<${arg}>`;
 					})
 					.join(", ");
 
-				commands += `Name: ${name}\nDescription: ${description}\nCategory: ${command.data.category}\n\t:information_source: Command Arguments: ${arguments}\n\n`;
+				commands += `Name: ${name}\nDescription: ${description}\nCategory: ${command.data.category}\n\t:information_source: Command Arguments: ${args}\n\n`;
 			} else
 				commands += `Name: ${name}\nDescription: ${description}\nCategory: ${command.data.category}\n\t:information_source: Command Arguments: None\n\n`;
 		});

@@ -1,9 +1,12 @@
 // Packages
-const { Sequelize, Model } = require("sequelize");
-const crypto = require("crypto");
-const fs = require("node:fs");
-const logger = require("../logger");
-require("dotenv").config();
+import { Sequelize, Model } from "sequelize";
+import crypto from "crypto";
+import fs from "node:fs";
+import * as logger from "../logger.js";
+import * as dotenv from "dotenv";
+
+// Dotenv Config
+dotenv.config();
 
 // Connect to PostgreSQL database
 const sequelize = new Sequelize({
@@ -13,7 +16,7 @@ const sequelize = new Sequelize({
 	database: "failuremgmt",
 	password: "password",
 	logging: (data) => {
-		logger.info("PostgreSQL", data);
+		logger.debug("PostgreSQL", data);
 	},
 });
 
@@ -26,20 +29,47 @@ sequelize
 
 // Schemas
 const schemaFiles = fs
-	.readdirSync("./database/schemas")
+	.readdirSync("./dist/database/schemas")
 	.filter((file) => file.endsWith(".js"));
-const schemas = {};
-const schemaData = {};
+let schemaData = [];
 
-for (const file of schemaFiles) {
-	const schema = require(`./schemas/${file}`);
+for (const fileName of schemaFiles) {
+	import(`./schemas/${fileName}`)
+		.then((module) => {
+			const file = module.default;
+			schemaData[file.name] = file;
+		})
+		.catch((error) => {
+			console.error(error);
+		});
+}
 
-	schemaData[schema.name] = schema;
-	schemas[schema.name] = sequelize.define(schema.name, schema.schema);
+interface UserType {
+	user_id: string;
+	server_id: string;
+	uuid: string;
+	levels: {
+		level: number;
+		xp: number;
+		xp_to_next_level: number;
+		lastXPUpdate: Date;
+	};
+	afk: boolean;
 }
 
 // User
-class User extends Model {
+class User extends Model implements UserType {
+	user_id: string;
+	server_id: string;
+	uuid: string;
+	levels: {
+		level: number;
+		xp: number;
+		xp_to_next_level: number;
+		lastXPUpdate: Date;
+	};
+	afk: boolean;
+
 	static async getUser(user_id, server_id) {
 		const data = await User.findOne({
 			where: {
@@ -141,10 +171,7 @@ const init = () => {
 
 	sequelize.sync();
 };
-
-init();
+setTimeout(() => init(), 2000);
 
 // Expose Classes
-module.exports = {
-	User,
-};
+export { User };

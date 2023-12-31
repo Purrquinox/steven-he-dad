@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	data: {
 		name: "level",
 		description: "Check your level/xp.",
