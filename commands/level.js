@@ -28,15 +28,15 @@ module.exports = {
 
 		if (!user.data)
 			return context.message.reply(
-				`${user.discord.username}#${user.discord.discriminator} was not found.`
+				`${user.discord.username} was not found.`
 			);
 		else
 			return context.message.reply({
-				content: `User: ${user.discord.username}#${
-					user.discord.discriminator
-				}\n\tLevel: ${String(user.data.levels.level)}\n\tXP: ${String(
-					user.data.levels.xp
-				)}/${String(user.data.levels.xp_to_next_level)}`,
+				content: `User: ${user.discord.username}\n\tLevel: ${String(
+					user.data.levels.level
+				)}\n\tXP: ${String(user.data.levels.xp)}/${String(
+					user.data.levels.xp_to_next_level
+				)}`,
 			});
 	},
 };

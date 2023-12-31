@@ -1,18 +1,18 @@
 name: Formatter
 on:
-  push:
-    branches: [ "canary" ]
-  pull_request:
-    branches: [ "production" ]
+    push:
+        branches: ["canary"]
+    pull_request:
+        branches: ["production"]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        token: ${{secrets.PERSONAL_GITHUB_TOKEN}}
-    - name: Install packages
-      run: npm i
-    - name: Run Prettier
-      run: npm run format
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  token: ${{secrets.PERSONAL_GITHUB_TOKEN}}
+            - name: Install packages
+              run: npm i
+            - name: Run Prettier
+              run: npm run format

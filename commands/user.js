@@ -28,7 +28,7 @@ module.exports = {
 
 		if (!user.data)
 			return context.message.reply(
-				`${user.discord.username}#${user.discord.discriminator} was not found.`
+				`${user.discord.username} was not found.`
 			);
 		else {
 			let hex;
@@ -50,7 +50,7 @@ module.exports = {
 				.addFields(
 					{
 						name: "User:",
-						value: `${user.discord.username}#${user.discord.discriminator}`,
+						value: `${user.discord.username}`,
 						inline: true,
 					},
 					{
@@ -69,7 +69,7 @@ module.exports = {
 					}
 				)
 				.setFooter({
-					text: `This command was executed by ${context.message.author.username}#${context.message.author.discriminator}.`,
+					text: `This command was executed by ${context.message.author.username}.`,
 					icon_url: context.message.member.displayAvatarURL(),
 				});
 

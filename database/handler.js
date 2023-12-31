@@ -13,7 +13,7 @@ const sequelize = new Sequelize({
 	database: "failuremgmt",
 	password: "password",
 	logging: (data) => {
-		return;
+		logger.info("PostgreSQL", data);
 	},
 });
 
@@ -139,7 +139,7 @@ const init = () => {
 		modelName: schemaData["users"].name,
 	});
 
-        sequelize.sync();
+	sequelize.sync();
 };
 
 init();

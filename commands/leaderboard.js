@@ -27,11 +27,11 @@ module.exports = {
 
 			leaderboard =
 				leaderboard +
-				`${index + 1}. **${userInfo.username}#${
-					userInfo.discriminator
-				}**\n\t- Level: ${user.dataValues.levels.level}\n\t- XP: ${
-					user.dataValues.levels.xp
-				}/${user.dataValues.levels.xp_to_next_level}\n\n`;
+				`${index + 1}. **${userInfo.username}**\n\t- Level: ${
+					user.dataValues.levels.level
+				}\n\t- XP: ${user.dataValues.levels.xp}/${
+					user.dataValues.levels.xp_to_next_level
+				}\n\n`;
 
 			shown = shown + 1;
 		});
@@ -44,7 +44,7 @@ module.exports = {
 				.setColor(0xff0000)
 				.setDescription(leaderboard)
 				.setFooter({
-					text: `This command was executed by ${context.message.author.username}#${context.message.author.discriminator}.`,
+					text: `This command was executed by ${context.message.author.username}.`,
 					icon_url: context.message.member.displayAvatarURL(),
 				});
 

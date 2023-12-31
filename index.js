@@ -283,10 +283,7 @@ client.on("guildMemberRemove", (member) => {
 		(channel) => channel.name === "welcome"
 	);
 
-	if (channel)
-		channel.send(
-			`${member.user.username}#${member.user.discriminator} has left the server!`
-		);
+	if (channel) channel.send(`${member.user.username} has left the server!`);
 });
 
 // Login to Discord
