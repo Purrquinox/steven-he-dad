@@ -5,7 +5,7 @@ export default {
 		category: "misc",
 		arguments: null,
 	},
-	async execute(context, client, EmbedBuilder, database) {
+	async execute(context, client, commands, EmbedBuilder, database) {
 		const message = await context.message.reply({
 			content: "Pinging our servers!",
 			fetchReply: true,

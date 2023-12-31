@@ -5,7 +5,7 @@ export default {
 		category: "failure",
 		arguments: ["failure"],
 	},
-	async execute(context, client, EmbedBuilder, database) {
+	async execute(context, client, commands, EmbedBuilder, database) {
 		let user;
 		const mention = context.message.mentions.users.first();
 

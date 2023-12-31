@@ -5,7 +5,7 @@ export default {
 		category: "levels",
 		arguments: null,
 	},
-	async execute(context, client, EmbedBuilder, database) {
+	async execute(context, client, commands, EmbedBuilder, database) {
 		let leaderboard = "";
 
 		const users = await database.User.getAllUsersByServer(

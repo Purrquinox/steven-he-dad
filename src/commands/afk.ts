@@ -5,7 +5,7 @@ export default {
 		category: "failure",
 		arguments: ["status"],
 	},
-	async execute(context, client, EmbedBuilder, database) {
+	async execute(context, client, commands, EmbedBuilder, database) {
 		const status = context.arguments[0] || null;
 
 		if (status) {

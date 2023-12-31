@@ -74,12 +74,30 @@ const apiEndpointsFiles = getFilesInDirectory("./dist/commands").filter(
 	(file) => file.endsWith(".js")
 );
 
-client.commands = new Collection();
+let commands: Collection<
+	string,
+	{
+		data: {
+			name: string;
+			description: string;
+			category: string;
+			arguments: string[];
+		};
+		execute: (
+			context,
+			client,
+			commands,
+			EmbedBuilder,
+			database
+		) => Promise<void>;
+	}
+> = new Collection();
+
 for (const file of apiEndpointsFiles) {
 	import(`../${file}`)
 		.then((module) => {
 			const i = module.default;
-			client.commands.set(i.data.name, i);
+			commands.set(i.data.name, i);
 		})
 		.catch((error) => {
 			console.error(`Error importing ${file}: ${error}`);
@@ -224,7 +242,7 @@ client.on("messageCreate", async (message) => {
 		.slice((process.env.PREFIX || ".").length)
 		.split(/ +/);
 	const commandName = args.shift()?.toLowerCase();
-	const command = client.commands.get(commandName);
+	const command = commands.get(commandName);
 
 	if (!command) return;
 
@@ -234,7 +252,13 @@ client.on("messageCreate", async (message) => {
 			arguments: args,
 		};
 
-		await command.execute(context, client, EmbedBuilder, database);
+		await command.execute(
+			context,
+			client,
+			commands,
+			EmbedBuilder,
+			database
+		);
 	} catch (error) {
 		logger.error(`Command (${commandName})`, error);
 
