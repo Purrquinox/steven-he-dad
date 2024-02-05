@@ -146,7 +146,7 @@ client.on("messageCreate", async (message) => {
 
 		if (channel)
 			channel?.send({
-				content: `Hello <@${message.author.id}>, thanks for sending your first message in **${message.guild?.name}**. You can now earn xp by being active here, and you can always track your xp by doing \`${process.env.PREFIX}level\`.`,
+				content: `Hello <@${message.author.id}>, thanks for sending your first message in **${message.guild?.name}**. You can now improve your Social Credit Score by being active here, and you can always track it by doing \`${process.env.PREFIX}level\`.`,
 			});
 	}
 
@@ -171,19 +171,19 @@ client.on("messageCreate", async (message) => {
 
 			if (channel)
 				channel?.send({
-					content: `Congrats, <@${message.author?.id}>!\nYou have claimed the Daily Double, and now have ${xp} XP.`,
+					content: `Congrats, <@${message.author?.id}>!\nYou have claimed the Daily Reward, and your Social Credit Score has increased to ${xp} XP.`,
 				});
 		} else xp = xp + 1;
 
-		// Check if the new XP is above the XP needed for the next level
+		// Check if the new XP is above the XP needed for the next tier
 		if (xp >= xp_to_next_level) {
-			// Add 1 to the user's level
+			// Add 1 to the user's tier
 			level = level + 1;
 
-			// Reset the user's XP to 0
+			// Reset the user's XP to tier
 			xp = xp - xp_to_next_level;
 
-			// Calculate the XP needed for the next level
+			// Calculate the XP needed for the next tier
 			xp_to_next_level =
 				Math.floor(Math.random() * (400 - 100 + 1)) + 100;
 
@@ -205,7 +205,7 @@ client.on("messageCreate", async (message) => {
 
 			if (channel)
 				channel?.send({
-					content: `Congrats, <@${message.author?.id}>!\nYou have leveled up to level ${level}!\nYou now need ${xp_to_next_level} XP to level up again.`,
+					content: `Congrats, <@${message.author?.id}>!\nYour Social Credit Score has leveled up to Tier ${level}!\nYou now need ${xp_to_next_level} XP to level up again.`,
 				});
 		}
 
